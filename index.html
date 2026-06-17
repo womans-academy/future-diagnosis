@@ -78,6 +78,7 @@
   .line-text { font-size:13px; line-height:1.8; color:var(--text-m); margin-bottom:22px; letter-spacing:-0.01em; }
   .btn-line { display:inline-flex; align-items:center; justify-content:center; gap:8px; background:var(--teal); color:#fff; font-family:'Noto Sans JP',sans-serif; font-weight:500; font-size:14px; letter-spacing:0.06em; padding:15px 32px; border-radius:40px; text-decoration:none; transition:opacity .2s; border:none; cursor:pointer; width:100%; max-width:300px; }
   .btn-line:hover { opacity:.85; }
+  .line-copy-note { font-size:11px; color:var(--text-s); margin-top:10px; letter-spacing:0.02em; }
   .seminar-block { background:var(--teal-pale); border:1px solid var(--teal-md); border-radius:20px; padding:32px 24px; width:100%; margin-bottom:28px; text-align:left; }
   .seminar-img { width:100%; border-radius:12px; margin-bottom:24px; display:block; }
   .seminar-checks { display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
@@ -198,6 +199,13 @@ function calcResult() {
   answers.forEach((ans, qi) => { scores[scoreMap[qi][ans]]++; });
   return results[scores.indexOf(Math.max(...scores))];
 }
+function copyResultText(typeName) {
+  const text = typeName + 'です';
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).catch(() => {});
+  }
+}
+
 function showResult() {
   const r = calcResult();
   document.getElementById('screen-result').innerHTML =
@@ -228,7 +236,8 @@ function showResult() {
     '<div class="line-block">' +
     '<svg class="line-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="24" fill="#3a9a8c"/><path d="M24 11c-7.18 0-13 4.86-13 10.86 0 5.38 4.62 9.88 10.86 10.7.42.09.99.28 1.14.64.13.33.08.84.04 1.17 0 0-.15.91-.18 1.11-.06.33-.26 1.28 1.12.7 1.38-.58 7.44-4.38 10.15-7.5C35.94 26.1 37 23.6 37 21.86 37 15.86 31.18 11 24 11z" fill="#fff"/></svg>' +
     '<p class="line-text">よかったら、診断結果をLINEで教えてくださいね。<br>あなたに合った一歩を、一緒に考えていきましょう。</p>' +
-    '<a class="btn-line" href="https://line.me/R/ti/p/@447xfrxq" target="_blank" rel="noopener noreferrer">LINEで診断結果を送る</a>' +
+    '<a class="btn-line" href="https://line.me/R/ti/p/@447xfrxq" target="_blank" rel="noopener noreferrer" onclick="copyResultText(\'' + r.type + '\')">LINEで診断結果を送る</a>' +
+    '<p class="line-copy-note">※「' + r.type + 'です」をコピーしました。LINEのトーク欄に貼り付けてくださいね。</p>' +
     '</div>' +
     '<button class="retry-btn" onclick="startQuiz()">もう一度診断する</button>';
   show('screen-result');
